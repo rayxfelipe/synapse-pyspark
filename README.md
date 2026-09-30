@@ -13,6 +13,7 @@ Local development workspace for Azure Synapse notebooks in:
 notebooks/
   FisCAL/
     QueryMoviesDB.ipynb
+    QueryMoviesDBNative.ipynb
 Synapse-PySpark.code-workspace
 ```
 
@@ -34,4 +35,6 @@ az synapse notebook create `
   --subscription 499bc654-f84c-46c2-952c-b30be508f78c
 ```
 
-The notebook reads up to 100 rows from `sqldedpool1.dbo.moviesDB` through the Azure Synapse Spark connector.
+Both notebooks read up to 100 rows from `sqldedpool1.dbo.moviesDB`.
+
+`QueryMoviesDB.ipynb` uses direct JDBC with Microsoft Entra authentication. `QueryMoviesDBNative.ipynb` uses the native Synapse dedicated SQL pool connector and requires access to the workspace's ADLS staging storage.
