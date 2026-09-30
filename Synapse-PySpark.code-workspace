@@ -1,0 +1,23 @@
+{
+  "folders": [
+    {
+      "name": "Synapse PySpark",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.ipynb_checkpoints": true,
+      "**/__pycache__": true
+    },
+    "jupyter.askForKernelRestart": false,
+    "notebook.lineNumbers": "on",
+    "python.analysis.typeCheckingMode": "basic"
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python",
+      "ms-toolsai.jupyter"
+    ]
+  }
+}
