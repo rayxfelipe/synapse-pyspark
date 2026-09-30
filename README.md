@@ -2,14 +2,7 @@
 
 Local development workspace for Azure Synapse notebooks.
 
-## Included environments
-
-| Workspace | Dedicated SQL pool | Spark pool | Notebook path |
-|---|---|---|---|
-| `synw-demoworkspace-001` | `sqldedpool1` | `sparkpool1` | `notebooks/FisCAL` |
-| `raysynapsemgdvnet` | `dedpoolinmgdvnet` | `FiscalSpark35` | `notebooks/raysynapsemgdvnet/FisCAL` |
-
-Both workspaces use the `FisCAL` Synapse folder. The managed-VNet workspace also has a second equivalent Spark 3.5 pool named `FiscalSpark35B`.
+The notebooks use customer-supplied configuration values and do not contain environment-specific Synapse workspace or dedicated SQL pool names.
 
 ## Project structure
 
@@ -18,7 +11,7 @@ notebooks/
   FisCAL/
     QueryMoviesDB.ipynb
     QueryMoviesDBNative.ipynb
-  raysynapsemgdvnet/
+  managed-vnet/
     FisCAL/
       QueryMoviesDB.ipynb
       QueryMoviesDBNative.ipynb
@@ -36,8 +29,17 @@ The simplest customer workflow is:
 1. Download an `.ipynb` file from this repository.
 2. In Synapse Studio, open **Develop**, select the add button, and choose **Import**.
 3. Import the notebook and attach a supported Spark pool.
-4. Replace the sample workspace, database, schema, table, and selected column names with values from the target environment.
-5. Run the notebook.
+4. Set the configuration values at the beginning of the code cell:
+
+   ```python
+   workspace_name = "<your-synapse-workspace-name>"
+   dedicated_pool = "<your-dedicated-sql-pool-name>"
+   schema_name = "dbo"
+   table_name = "moviesDB"
+   ```
+
+5. Update the selected columns if the target table does not use the sample `moviesDB` schema.
+6. Run the notebook.
 
 Importing the `.ipynb` is preferred over copying individual cells because it preserves Markdown, cell boundaries, and notebook metadata.
 
@@ -79,18 +81,16 @@ The JDBC notebook uses a Microsoft Entra access token and does not store a usern
 
 ```powershell
 az synapse notebook create `
-  --workspace-name synw-demoworkspace-001 `
+  --workspace-name <your-synapse-workspace-name> `
   --name QueryMoviesDB `
   --file '@notebooks\FisCAL\QueryMoviesDB.ipynb' `
   --folder-path FisCAL `
-  --spark-pool-name sparkpool1 `
+  --spark-pool-name <your-spark-pool-name> `
   --executor-count 2 `
   --executor-size Small `
-  --subscription 499bc654-f84c-46c2-952c-b30be508f78c
+  --subscription <your-subscription-id>
 ```
 
-Both notebooks read up to 100 rows from `sqldedpool1.dbo.moviesDB`.
+Both notebooks read up to 100 rows from the configured table.
 
 `QueryMoviesDB.ipynb` uses direct JDBC with Microsoft Entra authentication. `QueryMoviesDBNative.ipynb` uses the native Synapse dedicated SQL pool connector and requires access to the workspace's ADLS staging storage.
-
-The `raysynapsemgdvnet` copies target the `dedpoolinmgdvnet` dedicated SQL pool and `FiscalSpark35`.
